@@ -16,11 +16,11 @@ Configurar el backend
 cd vision-ia-backend
 pip install -r requirements.txt
 
-(Este paso ya deberia estar hecho)
-Crear un archivo llamado .env dentro de la carpeta vision-ia-backend con este contenido:
+(La api_key que hice ya se le acabo la prueba gratuita, asi que posiblemente no te funcione y tengas que crear una)
+En el archivo .env dentro de la carpeta vision-ia-backend con este contenido:
 GEMINI_API_KEY=tu_api_key_aqui
 
-Para obtener la API key gratis:
+Para obtener la API key gratis (La de Gemini):
 
 Ve a aistudio.google.com
 Inicia sesión con tu cuenta de Google
@@ -31,7 +31,7 @@ Configurar el frontend
 cd ../vision-ia-frontend
 npm install --legacy-peer-deps
 
-(Esto tambien deberia estar listo)
+(Esto esta listo)
 Crear un archivo llamado .env dentro de la carpeta vision-ia-frontend con este contenido:
 VITE_API_URL=http://localhost:8000
 
