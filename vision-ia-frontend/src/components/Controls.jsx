@@ -1,4 +1,7 @@
-export default function Controls({ loading, continuous, detailLevel, onDescribe, onToggleContinuous, onDetailChange }) {
+export default function Controls({
+  loading, continuous, detailLevel, voiceEnabled,
+  onDescribe, onToggleContinuous, onDetailChange, onToggleVoice
+}) {
   return (
     <div style={{
       padding: "16px 20px",
@@ -10,7 +13,7 @@ export default function Controls({ loading, continuous, detailLevel, onDescribe,
       paddingBottom: "max(16px, env(safe-area-inset-bottom))"
     }}>
 
-      {/* Botón principal — grande para fácil acceso táctil */}
+      {/* Botón principal */}
       <button
         onClick={onDescribe}
         disabled={loading}
@@ -22,7 +25,6 @@ export default function Controls({ loading, continuous, detailLevel, onDescribe,
           color: "white",
           fontSize: 17,
           fontWeight: 600,
-          letterSpacing: 0.3,
         }}
       >
         {loading ? "Analizando..." : "Describir ahora"}
@@ -33,7 +35,6 @@ export default function Controls({ loading, continuous, detailLevel, onDescribe,
         <button
           onClick={onToggleContinuous}
           aria-pressed={continuous}
-          aria-label={continuous ? "Desactivar modo continuo" : "Activar modo continuo"}
           style={{
             flex: 1, padding: 13,
             background: continuous ? "var(--accent)" : "var(--bg-card)",
@@ -50,7 +51,7 @@ export default function Controls({ loading, continuous, detailLevel, onDescribe,
         <select
           value={detailLevel}
           onChange={e => onDetailChange(e.target.value)}
-          aria-label="Nivel de detalle de la descripción"
+          aria-label="Nivel de detalle"
           style={{
             flex: 1, padding: 13,
             background: "var(--bg-card)",
@@ -66,21 +67,41 @@ export default function Controls({ loading, continuous, detailLevel, onDescribe,
         </select>
       </div>
 
-      {/* Botón silenciar voz */}
-      <button
-        onClick={() => window.speechSynthesis.cancel()}
-        aria-label="Silenciar la voz"
-        style={{
-          padding: 12,
-          background: "var(--bg-card)",
-          borderRadius: "var(--radius-md)",
-          color: "var(--text-muted)",
-          fontSize: 13,
-          border: "1px solid var(--border)",
-        }}
-      >
-        Silenciar voz
-      </button>
+      <div style={{ display: "flex", gap: 10 }}>
+        {/* Botón micrófono */}
+        <button
+          onClick={onToggleVoice}
+          aria-pressed={voiceEnabled}
+          aria-label={voiceEnabled ? "Desactivar comandos de voz" : "Activar comandos de voz"}
+          style={{
+            flex: 1, padding: 13,
+            background: voiceEnabled ? "#7F77DD" : "var(--bg-card)",
+            borderRadius: "var(--radius-md)",
+            color: voiceEnabled ? "white" : "var(--text-muted)",
+            fontSize: 13, fontWeight: 500,
+            border: `1px solid ${voiceEnabled ? "#7F77DD" : "var(--border)"}`,
+          }}
+        >
+          {voiceEnabled ? " Escuchando..." : " Activar voz"}
+        </button>
+
+        {/* Silenciar */}
+        <button
+          onClick={() => window.speechSynthesis.cancel()}
+          aria-label="Silenciar la voz"
+          style={{
+            flex: 1, padding: 13,
+            background: "var(--bg-card)",
+            borderRadius: "var(--radius-md)",
+            color: "var(--text-muted)",
+            fontSize: 13,
+            border: "1px solid var(--border)",
+          }}
+        >
+          Silenciar voz
+        </button>
+      </div>
+
     </div>
   )
 }

@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
+model = genai.GenerativeModel("gemini-2.0-flash-lite")
 
 app = FastAPI()
 
@@ -41,8 +41,17 @@ async def describe_image(req: ImageRequest):
         return {"description": response.text}
 
     except Exception as e:
+        print(f"ERROR DETALLADO: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.get("/modelos")
+def listar_modelos():
+    modelos = []
+    for m in genai.list_models():
+        if "generateContent" in m.supported_generation_methods:
+            modelos.append(m.name)
+    return {"modelos": modelos}

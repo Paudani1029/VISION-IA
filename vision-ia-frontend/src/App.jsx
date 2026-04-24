@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from "react"
+import { useVoiceCommands } from "./hooks/comandoVoz"
 import Camera from "./components/Camera"
 import DescriptionBox from "./components/DescriptionBox"
 import Controls from "./components/Controls"
@@ -20,6 +21,8 @@ export default function App() {
   const [cameraReady, setCameraReady] = useState(false)
 
   const { speak } = useSpeech()
+
+  const [voiceEnabled, setVoiceEnabled] = useState(false)
 
   // Iniciar cámara trasera del teléfono
   useEffect(() => {
@@ -66,11 +69,20 @@ export default function App() {
   // Modo continuo cada 5 segundos
   useInterval(captureAndDescribe, continuous ? 5000 : null)
 
+  //Voz por comando
+  useVoiceCommands({
+    onDescribe: captureAndDescribe,
+    onStartContinuous: () => setContinuous(true),
+    onStopContinuous: () => setContinuous(false),
+    onSilence: () => window.speechSynthesis.cancel(),
+    enabled: voiceEnabled,
+  })
+
   return (
     <main
       aria-label="Asistente visual VisionIA"
       style={{ maxWidth: 520, margin: "0 auto", height: "100dvh",
-        display: "flex", flexDirection: "column", overflow: "hidden" }}
+        display: "flex", flexDirection: "column", overflowY: "auto"}}
     >
       <h1 className="sr-only">VisionIA — Asistente visual con inteligencia artificial</h1>
 
@@ -95,9 +107,11 @@ export default function App() {
         loading={loading}
         continuous={continuous}
         detailLevel={detailLevel}
+        voiceEnabled={voiceEnabled}
         onDescribe={captureAndDescribe}
         onToggleContinuous={() => setContinuous(v => !v)}
         onDetailChange={setDetailLevel}
+        onToggleVoice={() => setVoiceEnabled(v => !v)}
       />
     </main>
   )
