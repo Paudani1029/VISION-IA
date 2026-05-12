@@ -47,9 +47,17 @@ npm run dev
 
 
 
+----- INTERFAZ -----
+
+Navegación sin botones --> el usuario seguramente no podrá verlos
+- ¿Por voz?
+- ¿Con botones laterales?
+- ¿Siempre activado, y solo damos voz/botones para desactivarlo?
 
 
-Navegación sin botones
+
+
+----- INSTRUCCIONES PARA LA IA / API -----
 
 Que hable solo cuando sea pertinente, en el modo continuo. O sea, solo para avisar de obstáculos.
 - ¿Hacer otro "continuo", para pruebas?
@@ -59,3 +67,18 @@ Memorizar rostros: "se acerca Pedrito"
 
 Que interrumpa cuando la imagen se ve obstaculizada.
 
+
+
+
+----- OTROS DE BACKEND -----
+
+"¿Cómo hacer que se ejecute en la página web, si tenemos que usar la terminal para ejecutar comandos de backend y frontend?"
+Debería ejecutarse automáticamente.
+
+Separar memorias para cada usuario
+IMPLEMENTAR MODELO DE BASE DE DATOS!!!!
+
+
+
+----- FACTIBILIDAD Y VIABILIDAD -----
+"¿Cuánta batería va a gastar en el celular?"
