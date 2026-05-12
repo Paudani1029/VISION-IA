@@ -1,15 +1,54 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-import google.generativeai as genai
+from openai import OpenAI
 import base64
 import os
 from dotenv import load_dotenv
 
+SYSTEM_PROMPT = """
+Eres un asistente visual para personas con discapacidad visual.
+
+Tu objetivo es ayudar a orientarse y comprender el entorno de manera rápida y útil.
+
+Prioridades:
+1. Obstáculos y peligros
+2. Personas y sus posiciones
+3. Objetos importantes
+4. Texto visible
+5. Orientación espacial y rutas
+
+Describe:
+- posiciones relativas (izquierda, derecha, frente, detrás)
+- distancias aproximadas
+- movimiento de personas u objetos
+- elementos útiles para desplazarse
+
+NO describas salvo que sea importante:
+- iluminación
+- sombras
+- ambiente visual
+- decoración
+- estética
+- colores irrelevantes
+- detalles artísticos
+
+Evita frases largas y descripciones cinematográficas.
+
+Responde de forma:
+- breve
+- clara
+- directa
+- útil para navegación y orientación
+
+Si no estás seguro de algo, dilo claramente.
+No inventes información.
+"""
+
+
 load_dotenv()
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-2.0-flash-lite")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 app = FastAPI()
 
@@ -25,33 +64,66 @@ class ImageRequest(BaseModel):
     detail_level: str = "medium"
 
 PROMPTS = {
-    "short": "Describe brevemente en 1 oración qué ves en esta imagen. Sé directo y claro.",
-    "medium": "Describe esta imagen en 2-3 oraciones para una persona con discapacidad visual. Menciona objetos principales, personas y el entorno.",
-    "detailed": "Describe esta imagen con detalle para una persona con discapacidad visual. Incluye: objetos presentes, personas, colores relevantes, texto visible, y cualquier información útil para orientarse en el espacio.",
+    "short": (
+        "Describe la escena en 1 oración corta. "
+        "Prioriza obstáculos, personas y objetos importantes."
+    ),
+
+    "medium": (
+        "Describe brevemente la escena para una persona con discapacidad visual. "
+        "Prioriza posiciones, objetos importantes, personas y orientación espacial."
+    ),
+
+    "detailed": (
+        "Describe detalladamente la escena para una persona con discapacidad visual. "
+        "Incluye posiciones relativas, distancias aproximadas, obstáculos, "
+        "texto visible y elementos útiles para desplazarse."
+    ),
 }
 
 @app.post("/describe")
 async def describe_image(req: ImageRequest):
     try:
-        image_data = base64.b64decode(req.image_base64)
-        image_part = {"mime_type": "image/jpeg", "data": image_data}
         prompt = PROMPTS.get(req.detail_level, PROMPTS["medium"])
 
-        response = model.generate_content([prompt, image_part])
-        return {"description": response.text}
+        # ⚠️ Formato correcto para OpenAI
+        image_url = f"data:image/jpeg;base64,{req.image_base64}"
+
+        response = client.responses.create(
+            model="gpt-4.1-mini",
+            input=[
+                {
+                    "role": "system",
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": SYSTEM_PROMPT
+                        }
+                    ],
+                },
+                
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "input_text", "text": prompt},
+                        {
+                            "type": "input_image",
+                            "image_url": image_url,
+                        },
+                    ],
+                }
+            ],
+        )
+
+        return {"description": response.output_text}
 
     except Exception as e:
         print(f"ERROR DETALLADO: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+
+
 @app.get("/health")
 def health():
     return {"status": "ok"}
 
-@app.get("/modelos")
-def listar_modelos():
-    modelos = []
-    for m in genai.list_models():
-        if "generateContent" in m.supported_generation_methods:
-            modelos.append(m.name)
-    return {"modelos": modelos}

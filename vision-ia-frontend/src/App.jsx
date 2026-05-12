@@ -67,7 +67,7 @@ export default function App() {
   }, [cameraReady, loading, detailLevel, speak])
 
   // Modo continuo cada 5 segundos
-  useInterval(captureAndDescribe, continuous ? 5000 : null)
+  useInterval(captureAndDescribe, continuous ? 2000 : null)
 
   //Voz por comando
   useVoiceCommands({

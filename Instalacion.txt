@@ -45,3 +45,17 @@ Terminal 2 — Frontend:
 cd vision-ia-frontend
 npm run dev
 
+
+
+
+
+Navegación sin botones
+
+Que hable solo cuando sea pertinente, en el modo continuo. O sea, solo para avisar de obstáculos.
+- ¿Hacer otro "continuo", para pruebas?
+- Si converso con una persona, sentados, no quiero que constantemente me diga "Juanita está frente tuyo". Que no diga nada. O tal vez que solo avise de sus gestos y expresiones más importantes.
+
+Memorizar rostros: "se acerca Pedrito"
+
+Que interrumpa cuando la imagen se ve obstaculizada.
+
