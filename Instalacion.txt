@@ -67,6 +67,10 @@ Memorizar rostros: "se acerca Pedrito"
 
 Que interrumpa cuando la imagen se ve obstaculizada.
 
+¿DETECTA OBJETOS "PEQUEÑOS" PELIGROSOS? --> Agua caliente, estufa, algo filudo en una mesa...
+
+Usuario debería tener la capacidad de retroalimentar?
+
 
 
 
@@ -76,7 +80,27 @@ Que interrumpa cuando la imagen se ve obstaculizada.
 Debería ejecutarse automáticamente.
 
 Separar memorias para cada usuario
-IMPLEMENTAR MODELO DE BASE DE DATOS!!!!
+¡¡¡¡ IMPLEMENTAR MODELO DE BASE DE DATOS !!!!
+
+IDEA:
+Podríamos hacer una especie de evaluación de base de datos. 
+Que la IA analice los datos que ha recopilado de su usuario, y deduzca ciertas cosas:
+1) Recoge:
+- Lugares más transitados
+- Personas con mayor interacción
+- Amenazas detectadas (caras enojadas que el usuario no notaría porque no las interactúa, esquinas con mucho tráfico, perros agresivos, calles peligrosas -usuario no percibe, porque ocurre a lo lejos de él) 
+    --> guardarlas en una memoria especial
+2) En base a ello:
+- Obstáculos más frecuentes / más probables
+- Generar nuevas advertencias: "cuidado con esa casa, perro peligroso"; "te sugiero que vayas por otra calle"
+- Si usuario retroalimenta, la IA aprende que esa situación requiere menos outputs de su parte. 
+    Ejemplo: "no, ese perro es amigo mío, no me hará nada" --> no volverá a advertir sobre esa casa específica.
+
+¿DESOBEDIENCIA PROGRAMADA?
+
+PREGUNTAS/RESPUESTAS DE ENTRENAMIENTO: Programar la IA para que solo pueda trabajar con el contenido que TÚ le estás cargando, con los prompts y fotos que tú le estás dando, para que solo pueda contestar cosas relevantes para tu proyecto.
+Así evitamos falsos positivos y falsos negativos, la hacemos más eficiente.
+
 
 
 
